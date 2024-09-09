@@ -79,7 +79,7 @@ android {
 
     namespace "com.redbook"
     defaultConfig {
-        applicationId "com.redbook"
+        applicationId "com.hixb.redbook"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
