@@ -1,0 +1,48 @@
+{
+  "root": true,
+  "plugins": ["react", "simple-import-sort"],
+  "extends": ["@antfu", "@react-native"],
+  "rules": {
+    "no-void": "off",
+    "no-undefined": "error",
+
+    "@typescript-eslint/no-namespace": "off",
+    "react/jsx-max-props-per-line": ["error", { "maximum": { "single": 4, "multi": 1 } }],
+    "react/jsx-first-prop-new-line": ["error", "multiline-multiprop"],
+    "react/jsx-closing-bracket-location": ["error", "line-aligned"],
+    "react/jsx-closing-tag-location": ["error", "line-aligned"],
+    "react/jsx-indent": ["error", 2],
+    "react/jsx-indent-props": ["error", 2],
+    "react/jsx-wrap-multilines": [
+      "error",
+      {
+        "declaration": "parens-new-line",
+        "assignment": "parens-new-line",
+        "return": "parens-new-line",
+        "arrow": "parens-new-line",
+        "condition": "parens-new-line",
+        "logical": "parens-new-line",
+        "prop": "parens-new-line"
+      }
+    ],
+    "react/jsx-tag-spacing": ["error", {
+      "closingSlash": "never",
+      "beforeSelfClosing": "always"
+    }],
+    "react/jsx-props-no-multi-spaces": "error",
+    "react/sort-prop-types": "error",
+    "react/jsx-curly-brace-presence": ["error", { "props": "never", "children": "never" }],
+    "react/jsx-key": ["error", { "checkFragmentShorthand": true }],
+    "react/jsx-no-leaked-render": "error",
+    "react/jsx-no-script-url": "error",
+    "react/self-closing-comp": ["error", {
+      "component": true,
+      "html": true
+    }],
+    "jsx-quotes": ["error", "prefer-double"],
+
+    "no-irregular-whitespace": "off",
+    "vue/no-irregular-whitespace": "off",
+    "n/prefer-global/process": "off"
+  }
+}
