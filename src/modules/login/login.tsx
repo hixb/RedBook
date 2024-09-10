@@ -1,6 +1,8 @@
 import React from 'react'
 import { Image, LayoutAnimation, Linking, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 
+import { useNavigation } from '@react-navigation/native'
+
 import icon_unselected from '~/assets/images/icon_unselected.png'
 import icon_selected from '~/assets/images/icon_selected.png'
 import icon_main_logo from '~/assets/images/icon_main_logo.png'
@@ -26,6 +28,8 @@ export default () => {
   const [loginType, setLoginType] = React.useState<'quick' | 'input'>('input')
   const [agreementCheck, setAgreementCheck] = React.useState<boolean>(false)
   const [viewPassword, setViewPassword] = React.useState<boolean>(false)
+
+  const navigation = useNavigation<ScreenNavigationProp<'Home'>>()
 
   const renderAgreementReading = () => {
     const agreementStyles = StyleSheet.create({
@@ -74,7 +78,11 @@ export default () => {
           <Image style={quickStyles.wechatIcon} source={icon_wx_logo} />
           <Text style={quickStyles.buttonText}>微信登录</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={[quickStyles.button, { backgroundColor: '#ff203a' }]} activeOpacity={0.7}>
+        <TouchableOpacity
+          style={[quickStyles.button, { backgroundColor: '#ff203a' }]}
+          activeOpacity={0.7}
+          onPress={() => navigation.replace('Home')}
+        >
           <Text style={quickStyles.buttonText}>一键登录</Text>
         </TouchableOpacity>
         <Image style={quickStyles.logo} source={icon_main_logo} />
@@ -141,7 +149,7 @@ export default () => {
             <Text style={inputStyles.methodText}>忘记密码?</Text>
           </TouchableOpacity>
         </View>
-        <TouchableOpacity style={inputStyles.loginButton}>
+        <TouchableOpacity style={inputStyles.loginButton} onPress={() => navigation.replace('Home')}>
           <Text>登录</Text>
         </TouchableOpacity>
         {renderAgreementReading()}
