@@ -11,12 +11,12 @@ import Home from '~/modules/home/home'
 const Stack = createStackNavigator()
 
 interface IRouter {
-  name: 'Welcome' | 'Login' | 'Home'
+  name: RouterNames
   component: () => React.JSX.Element
 }
 
 function App(): React.JSX.Element {
-  const initialRouteName: IRouter['name'] = 'Welcome'
+  const initialRouteName: RouterNames = 'Welcome'
   const defineRouters: IRouter[] = [
     { name: 'Welcome', component: Welcome },
     { name: 'Login', component: Login },

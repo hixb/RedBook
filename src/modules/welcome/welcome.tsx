@@ -1,5 +1,6 @@
 import React from 'react'
 import { Image, StyleSheet, View } from 'react-native'
+import { useNavigation } from '@react-navigation/native'
 import icon_main_logo from '~/assets/images/icon_main_logo.png'
 
 const styles = StyleSheet.create({
@@ -19,6 +20,14 @@ const styles = StyleSheet.create({
 })
 
 export default () => {
+  const navigation = useNavigation<ScreenNavigationProp<'Login'>>()
+
+  const navigateToLogin = React.useCallback(() => navigation.replace('Login'), [navigation])
+
+  React.useEffect(() => {
+    setTimeout(() => navigateToLogin(), 3000)
+  }, [navigateToLogin])
+
   return (
     <View style={styles.root}>
       <Image style={styles.logoMain} source={icon_main_logo} />
