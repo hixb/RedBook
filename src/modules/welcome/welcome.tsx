@@ -1,23 +1,7 @@
 import React from 'react'
-import { Image, StyleSheet, View } from 'react-native'
+import { Image, View } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import icon_main_logo from '~/assets/images/icon_main_logo.png'
-
-const styles = StyleSheet.create({
-  root: {
-    width: '100%',
-    height: '100%',
-    backgroundColor: 'white',
-    flexDirection: 'column',
-    alignItems: 'center',
-  },
-  logoMain: {
-    width: 200,
-    height: 105,
-    marginTop: 200,
-    resizeMode: 'contain',
-  },
-})
 
 export default () => {
   const navigation = useNavigation<ScreenNavigationProp<'Login'>>()
@@ -29,8 +13,8 @@ export default () => {
   }, [navigateToLogin])
 
   return (
-    <View style={styles.root}>
-      <Image style={styles.logoMain} source={icon_main_logo} />
+    <View className="w-full h-full bg-white flex-col items-center">
+      <Image style={{ resizeMode: 'contain' }} className="w-[100] h-[105 mt-200]" source={icon_main_logo} />
     </View>
   )
 }

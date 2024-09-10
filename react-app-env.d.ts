@@ -1,3 +1,5 @@
+/// <reference types="nativewind/types" />
+
 import type { StackNavigationProp } from '@react-navigation/stack/lib/typescript/src/types'
 
 declare global {
