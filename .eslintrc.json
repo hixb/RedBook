@@ -1,6 +1,6 @@
 {
   "root": true,
-  "plugins": ["react", "simple-import-sort"],
+  "plugins": ["react"],
   "extends": ["@antfu", "@react-native"],
   "rules": {
     "no-void": "off",
