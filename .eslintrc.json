@@ -43,6 +43,8 @@
 
     "no-irregular-whitespace": "off",
     "vue/no-irregular-whitespace": "off",
-    "n/prefer-global/process": "off"
+    "n/prefer-global/process": "off",
+
+    "react-native/no-inline-styles": 0
   }
 }
