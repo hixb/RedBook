@@ -31,6 +31,11 @@ export default () => {
 
   const navigation = useNavigation<ScreenNavigationProp<'Home'>>()
 
+  const [phoneNumber, setPhoneNumber] = React.useState<string>('')
+  const [password, setPassword] = React.useState<string>('')
+
+  const checkDisabled = agreementCheck && password.length > 6 && phoneNumber.length === 13
+
   const renderAgreementReading = () => {
     const agreementStyles = StyleSheet.create({
       agreementLayout: { width: '100%', flexDirection: 'row', marginBottom: 32 },
@@ -105,7 +110,9 @@ export default () => {
       captcha: { flexDirection: 'row', alignItems: 'center' },
       exchange: { width: 20, height: 15, marginRight: 5 },
       methodText: { color: '#222' },
-      loginButton: { width: '100%', height: 56, borderRadius: 100, backgroundColor: '#f5f5f5', marginTop: 20, alignItems: 'center', justifyContent: 'center', marginBottom: 20 },
+      loginButton: { width: '100%', height: 56, borderRadius: 100, backgroundColor: '#ff203a', marginTop: 20, alignItems: 'center', justifyContent: 'center', marginBottom: 20 },
+      loginText: { color: 'white', fontSize: 18 },
+      disabledButton: { backgroundColor: '#ddd' },
       closeWrap: { position: 'absolute', top: 25, left: 25 },
       closeIcon: { width: 30, height: 30 },
       threePartyLogin: { flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', marginTop: 40, width: '100%' },
@@ -127,6 +134,10 @@ export default () => {
             placeholder="请输入手机号码"
             placeholderTextColor="#bbb"
             autoFocus={false}
+            keyboardType="number-pad"
+            maxLength={13}
+            value={phoneNumber}
+            onChangeText={(text) => setPhoneNumber(formatPhoneNumber(text.replace(/\D/g, '')))}
           />
         </View>
         <View style={inputStyles.passwordLayout}>
@@ -135,6 +146,11 @@ export default () => {
             placeholder="请输入密码"
             placeholderTextColor="#bbb"
             autoFocus={false}
+            maxLength={16}
+            keyboardType="numbers-and-punctuation"
+            value={password}
+            secureTextEntry={!viewPassword}
+            onChangeText={(text) => setPassword(text)}
           />
           <TouchableOpacity onPress={() => setViewPassword(!viewPassword)}>
             <Image style={{ width: 25, height: 20 }} source={viewPassword ? icon_eye_open : icon_eye_close} />
@@ -149,8 +165,15 @@ export default () => {
             <Text style={inputStyles.methodText}>忘记密码?</Text>
           </TouchableOpacity>
         </View>
-        <TouchableOpacity style={inputStyles.loginButton} onPress={() => navigation.replace('Home')}>
-          <Text>登录</Text>
+        <TouchableOpacity
+          style={[
+            inputStyles.loginButton,
+            checkDisabled ? {} : inputStyles.disabledButton,
+          ]}
+          onPress={login}
+          disabled={!checkDisabled}
+        >
+          <Text style={inputStyles.loginText}>登录</Text>
         </TouchableOpacity>
         {renderAgreementReading()}
         <View style={inputStyles.threePartyLogin}>
@@ -164,6 +187,23 @@ export default () => {
   function changeLoginType() {
     LayoutAnimation.easeInEaseOut()
     setLoginType(loginType === 'quick' ? 'input' : 'quick')
+  }
+
+  function formatPhoneNumber(number: string) {
+    const cleaned = number.replace(/\D/g, '')
+    const match = cleaned.match(/^(\d{3})(\d{0,4})(\d{0,4})$/)
+
+    return match
+      ? match[1] + (match[2] ? `-${match[2]}` : '') + (match[3] ? `-${match[3]}` : '')
+      : cleaned
+  }
+
+  function login() {
+    if (!checkDisabled)
+      return
+
+    const phone = phoneNumber.replace(/\D/g, '')
+    console.log(phone)
   }
 
   return (
