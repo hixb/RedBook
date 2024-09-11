@@ -3,11 +3,9 @@ import { Dimensions, Image, Text, View } from 'react-native'
 import { observer, useLocalStore } from 'mobx-react'
 import { HomeStore } from '~/modules/home/homeStore.ts'
 
-import icon_heart_empty from '~/assets/images/icon_heart_empty.png'
 import FlowList from '~/components/flow/FlowList.jsx'
 import ResizeImage from '~/components/ResizeImage.tsx'
-
-// import icon_heart from '~/assets/images/icon_heart.png'
+import Heart from '~/components/Heart.tsx'
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window')
 
@@ -45,7 +43,12 @@ export default observer(() => {
                   <Text className="ml-1 text-sm">{item.userName}</Text>
                 </View>
                 <View className="flex-row items-center">
-                  <Image className="w-5 h-5 rounded-full" source={icon_heart_empty} style={{ resizeMode: 'contain' }} />
+                  <Heart
+                    value={item.isFavorite}
+                    onValueChanged={(value: boolean) => {
+                      console.log(value)
+                    }}
+                  />
                   <Text className="ml-1 text-sm">{item.favoriteCount}</Text>
                 </View>
               </View>
