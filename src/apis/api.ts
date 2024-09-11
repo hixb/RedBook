@@ -3,6 +3,10 @@ export const apiRoutes: IApiRoutes = {
     url: '/user/login',
     method: 'get',
   },
+  homeList: {
+    url: '/home/homeList',
+    method: 'get',
+  },
 }
 
 interface IApiRoutes {
