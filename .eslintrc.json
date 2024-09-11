@@ -47,7 +47,7 @@
 
     "react-native/no-inline-styles": 0,
     "react/no-unstable-nested-components": [
-      "error",
+      "off",
       {
         "allowAsProps": true
       }

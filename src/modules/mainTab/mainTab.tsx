@@ -1,21 +1,15 @@
 import React from 'react'
-import { Image, View } from 'react-native'
+import { Image, Text, TouchableOpacity, View } from 'react-native'
+import type { BottomTabBarProps } from '@react-navigation/bottom-tabs'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import Home from '~/modules/home/home.tsx'
 import Shop from '~/modules/shop/shop.tsx'
 import Message from '~/modules/message/message.tsx'
 import Mine from '~/modules/mine/mine.tsx'
 
-import icon_tab_home_normal from '~/assets/images/icon_tab_home_normal.png'
-import icon_tab_home_selected from '~/assets/images/icon_tab_home_selected.png'
-import icon_tab_shop_normal from '~/assets/images/icon_tab_shop_normal.png'
-import icon_tab_shop_selected from '~/assets/images/icon_tab_shop_selected.png'
-import icon_tab_message_normal from '~/assets/images/icon_tab_message_normal.png'
-import icon_tab_message_selected from '~/assets/images/icon_tab_message_selected.png'
-import icon_tab_mine_normal from '~/assets/images/icon_tab_mine_normal.png'
-import icon_tab_mine_selected from '~/assets/images/icon_tab_mine_selected.png'
+import icon_tab_publish from '~/assets/images/icon_tab_publish.png'
 
-type NameType = 'Home' | 'Shop' | 'Message' | 'Mine'
+type NameType = 'Home' | 'Shop' | 'Message' | 'Mine' | 'Publish'
 
 interface TabTypes {
   name: NameType
@@ -24,22 +18,6 @@ interface TabTypes {
 }
 
 const BottomTab = createBottomTabNavigator()
-const tabIcons: Record<NameType, { normal: any; selected: any }> = {
-  Home: { normal: icon_tab_home_normal, selected: icon_tab_home_selected },
-  Shop: { normal: icon_tab_shop_normal, selected: icon_tab_shop_selected },
-  Message: { normal: icon_tab_message_normal, selected: icon_tab_message_selected },
-  Mine: { normal: icon_tab_mine_normal, selected: icon_tab_mine_selected },
-}
-
-function TabBarIcon({ name, focused, size }: { name: NameType; focused: boolean; size: number }) {
-  const { normal, selected } = tabIcons[name]
-  return (
-    <Image
-      source={focused ? selected : normal}
-      style={{ width: size, height: size }}
-    />
-  )
-}
 
 export default () => {
   const tabs: TabTypes[] = [
@@ -54,6 +32,11 @@ export default () => {
       options: { title: '购物' },
     },
     {
+      name: 'Publish',
+      component: Shop,
+      options: { title: '占位' },
+    },
+    {
       name: 'Message',
       component: Message,
       options: { title: '消息' },
@@ -65,12 +48,56 @@ export default () => {
     },
   ]
 
+  const RedBookTabBar = ({ state, descriptors, navigation }: BottomTabBarProps) => {
+    const { routes, index } = state
+
+    return (
+      <View className="w-full h-14 flex-row items-center bg-white px-10 justify-between">
+        {
+          routes.map((route, idx) => {
+            const { options } = descriptors[route.key]
+            const label = options.title
+            const isFocused = index === idx
+
+            return idx === 2
+              ? (
+                <TouchableOpacity
+                  key={label}
+                  className="h-full flex-1 justify-center items-center"
+                >
+                  <Image source={icon_tab_publish} className="w-14 h-10" style={{ resizeMode: 'contain' }} />
+                </TouchableOpacity>
+                )
+              : (
+                <TouchableOpacity
+                  key={label}
+                  className="h-full flex-1 justify-center items-center"
+                  onPress={() => navigation.navigate(route.name)}
+                >
+                  <Text
+                    style={{
+                      color: isFocused ? 'red' : 'black',
+                      fontSize: isFocused ? 18 : 16,
+                      fontWeight: isFocused ? 'bold' : 'normal',
+                    }}
+                  >
+                    {label}
+                  </Text>
+                </TouchableOpacity>
+                )
+          })
+        }
+      </View>
+    )
+  }
+
   return (
     <View className="w-full h-full">
       <BottomTab.Navigator
-        screenOptions={({ route }) => ({
-          tabBarIcon: ({ focused, size }) => <TabBarIcon name={route.name as NameType} focused={focused} size={size} />,
-        })}
+        // screenOptions={({ route }) => ({
+        //   tabBarIcon: ({ focused, size }) => <TabBarIcon name={route.name as NameType} focused={focused} size={size} />,
+        // })}
+        tabBar={(props) => <RedBookTabBar {...props} />}
       >
         {tabs.map((tab) => (
           <BottomTab.Screen
