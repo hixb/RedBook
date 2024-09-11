@@ -13,6 +13,7 @@ import icon_eye_close from '~/assets/images/icon_eye_close.png'
 import icon_exchange from '~/assets/images/icon_exchange.png'
 import icon_close_modal from '~/assets/images/icon_close_modal.png'
 import icon_qq from '~/assets/images/icon_qq.webp'
+import { request } from '~/utils/request.ts'
 
 export default () => {
   const [loginType, setLoginType] = React.useState<'quick' | 'input'>('input')
@@ -142,7 +143,14 @@ export default () => {
       return
 
     const phone = phoneNumber.replace(/\D/g, '')
-    console.log(phone)
+
+    request('login', { name: 'dagongjue', pwd: 123456 })
+      .then((res) => {
+        console.log(res)
+      })
+      .catch((e) => {
+        console.error(e)
+      })
   }
 
   return (
