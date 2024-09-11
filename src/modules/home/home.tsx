@@ -1,10 +1,13 @@
 import React from 'react'
-import { Dimensions, FlatList, Image, Text, View } from 'react-native'
+import { Dimensions, Image, Text, View } from 'react-native'
 import { observer, useLocalStore } from 'mobx-react'
 import { HomeStore } from '~/modules/home/homeStore.ts'
 
-// import icon_heart from '~/assets/images/icon_heart.png'
 import icon_heart_empty from '~/assets/images/icon_heart_empty.png'
+import FlowList from '~/components/flow/FlowList.jsx'
+import ResizeImage from '~/components/ResizeImage.tsx'
+
+// import icon_heart from '~/assets/images/icon_heart.png'
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window')
 
@@ -17,7 +20,7 @@ export default observer(() => {
 
   return (
     <View className="w-full h-full justify-center items-center">
-      <FlatList
+      <FlowList
         className="w-full h-full"
         contentContainerStyle={{ paddingTop: 6 }}
         data={store.homeList}
@@ -27,13 +30,13 @@ export default observer(() => {
         onEndReachedThreshold={0.1}
         onEndReached={store.requestHomeList}
         onContentSizeChange={() => !store.homeList.length && store.requestHomeList()}
-        renderItem={({ item, index }) => (
+        renderItem={({ item, index }: { item: ArticleSimple; index: number }) => (
           <View
             style={{ width: SCREEN_WIDTH - 18 >> 1 }}
             className="bg-white ml-1.5 mb-1.5 rounded-lg overflow-hidden"
             key={item.id + index}
           >
-            <Image className="w-full h-60" source={{ uri: item.image }} style={{ resizeMode: 'cover' }} />
+            <ResizeImage uri={item.image} />
             <View className="px-2 mt-2 mb-3">
               <Text className="truncate text-lg text-black">{item.title}</Text>
               <View className="flex-row items-center justify-between mt-2">
