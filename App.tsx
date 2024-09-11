@@ -6,7 +6,7 @@ import { NavigationContainer } from '@react-navigation/native'
 
 import Welcome from '~/modules/welcome/welcome'
 import Login from '~/modules/login/login'
-import Home from '~/modules/home/home'
+import MainTab from '~/modules/mainTab/mainTab.tsx'
 
 const Stack = createStackNavigator()
 
@@ -20,7 +20,7 @@ function App(): React.JSX.Element {
   const defineRouters: IRouter[] = [
     { name: 'Welcome', component: Welcome },
     { name: 'Login', component: Login },
-    { name: 'Home', component: Home },
+    { name: 'MainTab', component: MainTab },
   ]
 
   return (

@@ -10,7 +10,7 @@ export default () => {
   const navigateToPage = React.useCallback(async () => {
     const userInfo = await fetch('userInfo')
 
-    navigation.replace(userInfo ? 'Home' : 'Login')
+    navigation.replace(userInfo ? 'MainTab' : 'Login')
   }, [navigation])
 
   React.useEffect(() => {

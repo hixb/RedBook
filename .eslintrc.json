@@ -45,6 +45,12 @@
     "vue/no-irregular-whitespace": "off",
     "n/prefer-global/process": "off",
 
-    "react-native/no-inline-styles": 0
+    "react-native/no-inline-styles": 0,
+    "react/no-unstable-nested-components": [
+      "error",
+      {
+        "allowAsProps": true
+      }
+    ]
   }
 }

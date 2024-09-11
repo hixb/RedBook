@@ -12,7 +12,7 @@ declare global {
   interface RootStackParamList {
     Welcome: undefined
     Login: undefined
-    Home: undefined
+    MainTab: undefined
   }
 
   type RouterNames = keyof RootStackParamList

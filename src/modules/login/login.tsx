@@ -20,7 +20,7 @@ export default () => {
   const [agreementCheck, setAgreementCheck] = React.useState<boolean>(false)
   const [viewPassword, setViewPassword] = React.useState<boolean>(false)
 
-  const navigation = useNavigation<ScreenNavigationProp<'Home'>>()
+  const navigation = useNavigation<ScreenNavigationProp<'MainTab'>>()
 
   const [phoneNumber, setPhoneNumber] = React.useState<string>('187-5160-9896')
   const [password, setPassword] = React.useState<string>('123456')
@@ -54,7 +54,7 @@ export default () => {
       <TouchableOpacity
         className="w-full h-12 rounded-full items-center justify-center flex-row mb-5 bg-[#ff203a]"
         activeOpacity={0.7}
-        onPress={() => navigation.replace('Home')}
+        onPress={() => navigation.replace('MainTab')}
       >
         <Text className="text-white text-base">一键登录</Text>
       </TouchableOpacity>
@@ -149,7 +149,7 @@ export default () => {
       pwd: password,
       callback: (success) => {
         if (success)
-          navigation.replace('Home')
+          navigation.replace('MainTab')
         else
           ToastAndroid.show('登录失败', ToastAndroid.SHORT)
       },
