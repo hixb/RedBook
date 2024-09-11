@@ -2,6 +2,7 @@ import React from 'react'
 import { Image, Text, TouchableOpacity, View } from 'react-native'
 import type { BottomTabBarProps } from '@react-navigation/bottom-tabs'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
+import { launchImageLibrary } from 'react-native-image-picker'
 import Home from '~/modules/home/home.tsx'
 import Shop from '~/modules/shop/shop.tsx'
 import Message from '~/modules/message/message.tsx'
@@ -64,6 +65,7 @@ export default () => {
                 <TouchableOpacity
                   key={label}
                   className="h-full flex-1 justify-center items-center"
+                  onPress={onPublishPress}
                 >
                   <Image source={icon_tab_publish} className="w-14 h-10" style={{ resizeMode: 'contain' }} />
                 </TouchableOpacity>
@@ -88,6 +90,29 @@ export default () => {
           })
         }
       </View>
+    )
+  }
+
+  function onPublishPress() {
+    launchImageLibrary(
+      {
+        mediaType: 'photo',
+        quality: 1,
+        includeBase64: true,
+      },
+      (response) => {
+        const { assets } = response
+        if (!assets?.length)
+          return
+
+        const { uri, width, height, type, fileSize, fileName } = assets[0]
+        console.log('uri', uri)
+        console.log('width', width)
+        console.log('height', height)
+        console.log('type', type)
+        console.log('fileSize', fileSize)
+        console.log('fileName', fileName)
+      },
     )
   }
 
