@@ -32,7 +32,7 @@ instance.interceptors.response.use(
   },
 )
 
-export function request<T>(name: string, data: T) {
+export function request<T, k>(name: string, data: T) {
   const api = apiRoutes[name]
 
   if (!api)
@@ -40,13 +40,13 @@ export function request<T>(name: string, data: T) {
 
   const { url, method } = api
 
-  return method === 'get' ? get(url, data) : post(url, data)
+  return method === 'get' ? get<T, k>(url, data) : post<T, k>(url, data)
 }
 
-export function get<T>(url: string, params: T) {
-  return instance.get(url, { params })
+export function get<T, K>(url: string, params: T) {
+  return instance.get<K>(url, { params })
 }
 
-export function post<T>(url: string, data: T) {
-  return instance.post(url, { data })
+export function post<T, K>(url: string, data: T) {
+  return instance.post<K>(url, { data })
 }

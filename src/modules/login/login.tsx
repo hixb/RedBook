@@ -1,5 +1,5 @@
 import React from 'react'
-import { Image, LayoutAnimation, Linking, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { Image, LayoutAnimation, Linking, Text, TextInput, ToastAndroid, TouchableOpacity, View } from 'react-native'
 
 import { useNavigation } from '@react-navigation/native'
 
@@ -13,7 +13,7 @@ import icon_eye_close from '~/assets/images/icon_eye_close.png'
 import icon_exchange from '~/assets/images/icon_exchange.png'
 import icon_close_modal from '~/assets/images/icon_close_modal.png'
 import icon_qq from '~/assets/images/icon_qq.webp'
-import { request } from '~/utils/request.ts'
+import UserStore from '~/stores/user'
 
 export default () => {
   const [loginType, setLoginType] = React.useState<'quick' | 'input'>('input')
@@ -22,10 +22,10 @@ export default () => {
 
   const navigation = useNavigation<ScreenNavigationProp<'Home'>>()
 
-  const [phoneNumber, setPhoneNumber] = React.useState<string>('')
-  const [password, setPassword] = React.useState<string>('')
+  const [phoneNumber, setPhoneNumber] = React.useState<string>('187-5160-9896')
+  const [password, setPassword] = React.useState<string>('123456')
 
-  const checkDisabled = agreementCheck && password.length > 6 && phoneNumber.length === 13
+  const checkDisabled = agreementCheck && password.length >= 6 && phoneNumber.length === 13
 
   const RenderAgreementReading = (
     <View className="w-full flex-row mb-8">
@@ -144,13 +144,16 @@ export default () => {
 
     const phone = phoneNumber.replace(/\D/g, '')
 
-    request('login', { name: 'dagongjue', pwd: 123456 })
-      .then((res) => {
-        console.log(res)
-      })
-      .catch((e) => {
-        console.error(e)
-      })
+    UserStore.requestLogin({
+      name: phone,
+      pwd: password,
+      callback: (success) => {
+        if (success)
+          navigation.replace('Home')
+        else
+          ToastAndroid.show('登录失败', ToastAndroid.SHORT)
+      },
+    })
   }
 
   return (
