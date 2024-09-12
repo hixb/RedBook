@@ -27,7 +27,7 @@ export default observer(() => {
   const [myChannel, setMyChannel] = React.useState<Category[]>([])
   const [recommendChannel, setRecommendChannel] = React.useState<Category[]>([])
 
-  const [visible, setVisible] = React.useState<boolean>(true)
+  const [visible, setVisible] = React.useState<boolean>(false)
   const [isEdit, setIsEdit] = React.useState<boolean>(false)
 
   const tabList = [
