@@ -1,12 +1,15 @@
 import React from 'react'
-import { Dimensions, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Dimensions, Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { observer, useLocalStore } from 'mobx-react'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import { ArticleStore } from '~/modules/articleDetail/articleDetailStore.ts'
 import { ImageSlider } from '~/components/slidePager'
+import UserStore from '~/stores/user.ts'
 
 import icon_arrow from '~/assets/images/icon_arrow.png'
 import icon_share from '~/assets/images/icon_share.png'
+import { extractMonthAndDay } from '~/utils/date.ts'
+import Heart from '~/components/Heart.tsx'
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window')
 
@@ -33,6 +36,7 @@ export default observer(() => {
   const [height, setHeight] = React.useState(0)
 
   const detail = React.useMemo(() => store.detail, [store.detail])
+  const userInfo = React.useMemo(() => UserStore.userInfo, [])
 
   React.useEffect(() => {
     store.requestArticleDetail(route.params.id)
@@ -90,11 +94,99 @@ export default observer(() => {
               )
             : null
         }
+
+        {/* 标题简介区 */}
         <Text className="text-lg text-[#333] font-bold px-4">{detail?.title ?? ''}</Text>
         <Text className="text-xs text-[#333] mt-1.5 px-4">{detail?.desc ?? ''}</Text>
         <Text className="text-xs text-[#3050d0] mt-1.5 px-4">{detail?.tag.map(i => `# ${i}`).join(' ')}</Text>
         <Text className="text-xs text-[#bbb] my-4 px-4">{detail?.dateTime}  {detail?.location}</Text>
         <View className="mx-4 bg-[#eee]" style={{ height: StyleSheet.hairlineWidth }} />
+
+        {/* 评论区 */}
+        <Text className="text-sm text-[#666] mt-5 ml-4">
+          {
+            detail?.comments?.length
+              ? `共 ${detail?.comments.length} 条评论`
+              : '暂无评论'
+          }
+        </Text>
+        <View className="p-4 flex-row items-center">
+          {
+            userInfo?.avatar
+              ? (
+                <Image
+                  source={{ uri: userInfo?.avatar ?? '' }}
+                  className="w-8 h-8 rounded-full"
+                  style={{ resizeMode: 'cover' }}
+                />
+                )
+              : null
+          }
+          <TextInput
+            placeholder="说点什么吧, 万一火了呢~"
+            className="flex-1 h-8 rounded-full ml-4 bg-[#f0f0f0] text-sm text-[#333] py-0 px-3"
+            placeholderTextColor="#bbb"
+          />
+        </View>
+        {
+          detail?.comments?.length
+            ? (
+              <View className="px-4 pt-4 mb-8">
+                {
+                  detail.comments.map((comment) => (
+                    <View key={comment.message}>
+                      <View className="w-full flex-row">
+                        <Image
+                          className="w-8 h-8 rounded-full"
+                          style={{ resizeMode: 'cover' }}
+                          source={{ uri: comment.avatarUrl }}
+                        />
+                        <View className="flex-1 mx-3">
+                          <Text className="text-sm text-[#999]">{comment.userName}</Text>
+                          <Text className="text-sm text-[#999] mt-1.5">
+                            {comment.message}
+                            <Text className="text-xs text-[#bbb]"> {extractMonthAndDay(comment.dateTime)} {comment.location}</Text>
+                          </Text>
+                          {
+                            comment.children?.length
+                              ? (
+                                  comment.children.map((child) => (
+                                    <View key={child.message} className="w-full flex-row my-3" style={{ width: SCREEN_WIDTH - 76 }}>
+                                      <Image
+                                        className="w-8 h-8 rounded-full"
+                                        style={{ resizeMode: 'cover' }}
+                                        source={{ uri: child.avatarUrl }}
+                                      />
+                                      <View className="flex-1 mx-3">
+                                        <Text className="text-sm text-[#999]">{child.userName}</Text>
+                                        <Text className="text-sm text-[#999] mt-1.5">
+                                          {child.message}
+                                          <Text className="text-xs text-[#bbb]"> {extractMonthAndDay(child.dateTime)} {child.location}</Text>
+                                        </Text>
+                                      </View>
+                                      <View className="flex-col items-center">
+                                        <Heart value={child.isFavorite} size={20} />
+                                        <Text className="text-xs mt-0.5 text-[#666]">{child.favoriteCount}</Text>
+                                      </View>
+                                    </View>
+                                  ))
+                                )
+                              : null
+                          }
+                        </View>
+                        <View className="flex-col items-center">
+                          <Heart value={comment.isFavorite} size={20} />
+                          <Text className="text-xs mt-0.5 text-[#666]">{comment.favoriteCount}</Text>
+                        </View>
+                      </View>
+                      <View className="ml-[50] bg-[#eee] mb-4" style={{ height: StyleSheet.hairlineWidth }} />
+                    </View>
+                  ))
+                }
+              </View>
+              )
+            : <Text>没有评论~</Text>
+        }
       </ScrollView>
     </View>
   )

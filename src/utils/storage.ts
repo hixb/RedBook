@@ -9,7 +9,7 @@ export async function save(key: string, value: Record<string, any> | string | nu
   }
 }
 
-export async function fetch(key: string): Promise<string | null> {
+export async function fetch<T>(key: string): Promise<T | null> {
   try {
     const getValue = await AsyncStorage.getItem(key)
 

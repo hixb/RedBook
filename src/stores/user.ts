@@ -1,4 +1,4 @@
-import { flow } from 'mobx'
+import { action, flow, observable } from 'mobx'
 import { request } from '~/utils/request.ts'
 import { save } from '~/utils/storage.ts'
 
@@ -7,18 +7,13 @@ interface UserInfoRequest {
   pwd: string
 }
 
-interface UserInfoTypes {
-  name: string
-  avatar: string
-  desc: string
-  sex: string
-  redBookId: number
-  location: string
-  nickName: string
-}
-
 class UserStore {
-  userInfo: UserInfoTypes | null = null
+  @observable userInfo: UserInfoTypes | null = null
+
+  @action
+  setUserInfo = (userInfo: UserInfoTypes) => {
+    this.userInfo = userInfo
+  }
 
   requestLogin = flow(function* (this: UserStore, params: UserInfoRequest & { callback?: (success: boolean) => void }) {
     try {

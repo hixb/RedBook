@@ -27,6 +27,16 @@ declare global {
 
   type ScreenNavigationProp<T extends RouterNames> = StackNavigationProp<RootStackParamList, T>
 
+  interface UserInfoTypes {
+    name: string
+    avatar: string
+    desc: string
+    sex: string
+    redBookId: number
+    location: string
+    nickName: string
+  }
+
   interface ArticleComment {
     userName: string
     avatarUrl: string
