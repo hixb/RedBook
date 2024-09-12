@@ -15,7 +15,10 @@ type NameType = 'Home' | 'Shop' | 'Message' | 'Mine' | 'Publish'
 interface TabTypes {
   name: NameType
   component: () => React.JSX.Element
-  options: { title: string }
+  options: {
+    title: string
+    headerShown?: boolean
+  }
 }
 
 const BottomTab = createBottomTabNavigator()
@@ -25,27 +28,27 @@ export default () => {
     {
       name: 'Home',
       component: Home,
-      options: { title: '首页' },
+      options: { title: '首页', headerShown: false },
     },
     {
       name: 'Shop',
       component: Shop,
-      options: { title: '购物' },
+      options: { title: '购物', headerShown: false },
     },
     {
       name: 'Publish',
       component: Shop,
-      options: { title: '占位' },
+      options: { title: '占位', headerShown: false },
     },
     {
       name: 'Message',
       component: Message,
-      options: { title: '消息' },
+      options: { title: '消息', headerShown: false },
     },
     {
       name: 'Mine',
       component: Mine,
-      options: { title: '我的' },
+      options: { title: '我的', headerShown: false },
     },
   ]
 
