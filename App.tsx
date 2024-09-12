@@ -7,6 +7,7 @@ import { NavigationContainer } from '@react-navigation/native'
 import Welcome from '~/modules/welcome/welcome'
 import Login from '~/modules/login/login'
 import MainTab from '~/modules/mainTab/mainTab.tsx'
+import ArticleDetail from '~/modules/articleDetail/articleDetail.tsx'
 
 const Stack = createStackNavigator()
 
@@ -21,6 +22,7 @@ function App(): React.JSX.Element {
     { name: 'Welcome', component: Welcome },
     { name: 'Login', component: Login },
     { name: 'MainTab', component: MainTab },
+    { name: 'ArticleDetail', component: ArticleDetail },
   ]
 
   return (

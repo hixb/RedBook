@@ -2,22 +2,24 @@ import React from 'react'
 import { Dimensions, Image, LayoutAnimation, ScrollView, StatusBar, Text, TouchableOpacity, View } from 'react-native'
 import { observer, useLocalStore } from 'mobx-react'
 import { Modal } from 'nativewind/dist/preflight'
+import { useNavigation } from '@react-navigation/native'
 import { HomeStore } from '~/modules/home/homeStore.ts'
 
 import FlowList from '~/components/flow/FlowList.jsx'
 import ResizeImage from '~/components/ResizeImage.tsx'
 import Heart from '~/components/Heart.tsx'
+import { save } from '~/utils/storage.ts'
 
 import icon_daily from '~/assets/images/icon_daily.png'
 import icon_search from '~/assets/images/icon_search.png'
 import icon_arrow from '~/assets/images/icon_arrow.png'
 import icon_delete from '~/assets/images/icon_delete.png'
-import { save } from '~/utils/storage.ts'
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window')
 
 export default observer(() => {
   const store = useLocalStore(() => new HomeStore())
+  const navigation = useNavigation<ScreenNavigationProp<'ArticleDetail'>>()
 
   const [tabIndex, setTabIndex] = React.useState<number>(1)
   const [currentCate, setCurrentCate] = React.useState<string>('推荐')
@@ -71,6 +73,10 @@ export default observer(() => {
     setMyChannel(newChannel)
     setRecommendChannel(newRecommend)
   }, [isEdit, myChannel, recommendChannel])
+
+  const onArticlePress = React.useCallback((article: ArticleSimple) => {
+    navigation.push('ArticleDetail', { id: article.id })
+  }, [navigation])
 
   return (
     <View className="w-full h-full justify-center items-center">
@@ -138,10 +144,11 @@ export default observer(() => {
           )
         }}
         renderItem={({ item, index }: { item: ArticleSimple; index: number }) => (
-          <View
+          <TouchableOpacity
             style={{ width: SCREEN_WIDTH - 18 >> 1 }}
             className="bg-white ml-1.5 mb-1.5 rounded-lg overflow-hidden"
             key={item.id + index}
+            onPress={() => onArticlePress(item)}
           >
             <ResizeImage uri={item.image} />
             <View className="px-2 mt-2 mb-3">
@@ -162,7 +169,7 @@ export default observer(() => {
                 </View>
               </View>
             </View>
-          </View>
+          </TouchableOpacity>
         )}
         ListFooterComponent={() => <Text className="w-ful text-xs text-[#999] my-3 text-center">没有更多数据了~</Text>}
       />

@@ -7,6 +7,10 @@ export const apiRoutes: IApiRoutes = {
     url: '/home/homeList',
     method: 'get',
   },
+  articleDetail: {
+    url: '/article/articleDetail',
+    method: 'get',
+  },
 }
 
 interface IApiRoutes {

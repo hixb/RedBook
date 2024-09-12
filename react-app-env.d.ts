@@ -1,6 +1,7 @@
 /// <reference types="nativewind/types" />
 
 import type { StackNavigationProp } from '@react-navigation/stack/lib/typescript/src/types'
+import type { RouteProp } from '@react-navigation/native'
 
 declare global {
   declare module '*.png';
@@ -9,13 +10,20 @@ declare global {
   declare module '*.jpg';
   declare module '*.webp';
 
-  interface RootStackParamList {
+  interface BaseStackParamList {
     Welcome: undefined
     Login: undefined
     MainTab: undefined
+    ArticleDetail: { id: number }
   }
 
-  type RouterNames = keyof RootStackParamList
+  type RootStackParamList = BaseStackParamList & {
+    [key: string]: object | undefined
+  }
+
+  type RoutePropType<T extends keyof RootStackParamList> = RouteProp<RootStackParamList, T>
+
+  type RouterNames = keyof BaseStackParamList
 
   type ScreenNavigationProp<T extends RouterNames> = StackNavigationProp<RootStackParamList, T>
 
