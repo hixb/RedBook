@@ -55,18 +55,24 @@ export default observer(() => {
         <TouchableOpacity onPress={() => navigation.pop()} className="px-4 h-full justify-center">
           <Image source={icon_arrow} className="w-5 h-5" />
         </TouchableOpacity>
-        <Image
-          className="w-10 h-10 rounded-full"
-          style={{ resizeMode: 'cover' }}
-          source={{ uri: detail?.avatarUrl ?? '' }}
-        />
+        {
+          detail?.avatarUrl
+            ? (
+              <Image
+                className="w-10 h-10 rounded-full"
+                style={{ resizeMode: 'cover' }}
+                source={{ uri: detail?.avatarUrl ?? '' }}
+              />
+              )
+            : null
+        }
         <Text className="ml-4 text-base text-[#333] flex-1">{detail?.userName}</Text>
         <TouchableOpacity className="px-4 h-7 rounded-full border border-[#ff2442] items-center justify-center">
           <Text className="text-xs text-[#ff2442]">关注</Text>
         </TouchableOpacity>
         <Image source={icon_share} className="w-7 h-7 mx-4" />
       </View>
-      <ScrollView className="" showsVerticalScrollIndicator={false}>
+      <ScrollView showsVerticalScrollIndicator={false}>
         {
           detail?.images.length
             ? (
@@ -84,6 +90,11 @@ export default observer(() => {
               )
             : null
         }
+        <Text className="text-lg text-[#333] font-bold px-4">{detail?.title ?? ''}</Text>
+        <Text className="text-xs text-[#333] mt-1.5 px-4">{detail?.desc ?? ''}</Text>
+        <Text className="text-xs text-[#3050d0] mt-1.5 px-4">{detail?.tag.map(i => `# ${i}`).join(' ')}</Text>
+        <Text className="text-xs text-[#bbb] my-4 px-4">{detail?.dateTime}  {detail?.location}</Text>
+        <View className="mx-4 bg-[#eee]" style={{ height: StyleSheet.hairlineWidth }} />
       </ScrollView>
     </View>
   )
