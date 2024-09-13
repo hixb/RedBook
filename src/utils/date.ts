@@ -11,12 +11,3 @@ export function extractMonthAndDay(dateString: string): string {
 
   return `${month}-${day}`
 }
-
-// Example usage
-try {
-  const result = extractMonthAndDay('2023-02-28 11:11')
-  console.log(result) // Output: "02-28"
-}
-catch (error) {
-  console.error(error)
-}

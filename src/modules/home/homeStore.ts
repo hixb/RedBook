@@ -108,10 +108,10 @@ export class HomeStore {
   }
 
   getCategoryList = async () => {
-    const cacheListStr = await fetch('categoryList')
+    const cacheListStr = await fetch<Category[]>('categoryList')
 
     if (cacheListStr) {
-      const cacheList = JSON.parse(cacheListStr) as Category[]
+      const cacheList = cacheListStr
       this.categoryList = cacheList?.length ? cacheList : DEFAULT_CATEGORY_LIST
     }
     else {

@@ -109,12 +109,6 @@ export default () => {
           return
 
         const { uri, width, height, type, fileSize, fileName } = assets[0]
-        console.log('uri', uri)
-        console.log('width', width)
-        console.log('height', height)
-        console.log('type', type)
-        console.log('fileSize', fileSize)
-        console.log('fileName', fileName)
       },
     )
   }
