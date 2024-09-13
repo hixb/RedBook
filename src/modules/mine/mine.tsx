@@ -34,8 +34,12 @@ import icon_wish from '~/assets/images/icon_wish.png'
 import icon_red_vip from '~/assets/images/icon_red_vip.png'
 import icon_community from '~/assets/images/icon_community.png'
 import icon_exit from '~/assets/images/icon_exit.png'
+import { remove } from '~/utils/storage.ts'
 
-// import icon_location_info from '~/assets/images/icon_location_info.png'
+interface MenusTypes {
+  icon: number
+  name: string
+}
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window')
 const CONTENT_WIDTH = SCREEN_WIDTH * 0.75
@@ -45,7 +49,7 @@ const EMPTY_CONFIG = [
   { icon: icon_no_collection, tips: '快去收藏你喜欢的作品吧～' },
   { icon: icon_no_favorate, tips: '喜欢点赞的人运气不会太差哦～' },
 ]
-const MENUS = [
+const MENUS: MenusTypes[][] = [
   [
     { icon: icon_fid_user, name: '发现好友' },
   ],
@@ -113,6 +117,15 @@ export default () => {
 
   const onArticlePress = React.useCallback((article: ArticleSimple) => {
     navigation.push('ArticleDetail', { id: article.id })
+  }, [navigation])
+
+  const onMenuItemPress = React.useCallback(async (item: MenusTypes) => {
+    if (item.name === '退出登陆') {
+      hideModal()
+
+      await remove('userInfo')
+      navigation.reset({ index: 0, routes: [{ name: 'Login' }] })
+    }
   }, [navigation])
 
   function showModal() {
@@ -266,7 +279,7 @@ export default () => {
                   <View key={index}>
                     {
                       menu.map((sub, idx) => (
-                        <TouchableOpacity key={idx} className="w-full h-16 flex-row items-center">
+                        <TouchableOpacity key={idx} className="w-full h-16 flex-row items-center" onPress={() => onMenuItemPress(sub)}>
                           <Image source={sub.icon} className="w-8 h-8" style={{ resizeMode: 'contain' }} />
                           <Text className="text-base text-[#333] ml-3">{sub.name}</Text>
                         </TouchableOpacity>
