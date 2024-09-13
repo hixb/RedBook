@@ -44,6 +44,7 @@ export default observer(() => {
         style={{ flex: 1 }}
         extraData={[store.categoryList]}
         numColumns={2}
+        keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
           <View className="rounded-lg overflow-hidden ml-1.5 mt-1.5" style={{ width: ITEM_WIDTH }}>
             <Image className="w-full h-[200]" source={{ uri: item.image }} style={{ resizeMode: 'cover' }} />
