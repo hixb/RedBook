@@ -5,11 +5,16 @@ import { useNavigation, useRoute } from '@react-navigation/native'
 import { ArticleStore } from '~/modules/articleDetail/articleDetailStore.ts'
 import { ImageSlider } from '~/components/slidePager'
 import UserStore from '~/stores/user.ts'
+import { extractMonthAndDay } from '~/utils/date.ts'
+import Heart from '~/components/Heart.tsx'
 
 import icon_arrow from '~/assets/images/icon_arrow.png'
 import icon_share from '~/assets/images/icon_share.png'
-import { extractMonthAndDay } from '~/utils/date.ts'
-import Heart from '~/components/Heart.tsx'
+import icon_collection from '~/assets/images/icon_collection.png'
+import icon_collection_selected from '~/assets/images/icon_collection_selected.png'
+import icon_edit_comment from '~/assets/images/icon_edit_comment.png'
+
+// import icon_comment from '~/assets/images/icon_comment.png'
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window')
 
@@ -188,6 +193,24 @@ export default observer(() => {
             : <Text>没有评论~</Text>
         }
       </ScrollView>
+      <View className="w-full h-16 flex-row items-center px-4 border-t border-t-[#eee]">
+        <View className="h-10 flex-1 bg-[#f0f0f0] rounded-full flex-row items-center px-3 mr-3">
+          <Image className="w-5 h-5" source={icon_edit_comment} />
+          <TextInput
+            placeholder="说点什么..."
+            className="text-xs text-[#333] h-full"
+            placeholderTextColor="#666"
+          />
+        </View>
+        <Heart value={detail?.isFavorite ?? false} size={30} />
+        <Text className="text-xs text-[#333] font-bold ml-2.5">{detail?.favoriteCount ?? 0}</Text>
+        <Image
+          className="w-[30] h-[30] ml-3"
+          style={{ resizeMode: 'contain' }}
+          source={detail?.isCollection ? icon_collection_selected : icon_collection}
+        />
+        <Text className="text-xs text-[#333] font-bold ml-2.5">{detail?.favoriteCount ?? 0}</Text>
+      </View>
     </View>
   )
 })
