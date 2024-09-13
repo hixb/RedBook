@@ -1,5 +1,5 @@
 import React from 'react'
-import { Dimensions, Image, ScrollView, Text, TouchableOpacity, View } from 'react-native'
+import { Dimensions, Image, LayoutAnimation, Modal, RefreshControl, ScrollView, Text, TouchableOpacity, View } from 'react-native'
 import { useLocalStore } from 'mobx-react'
 import { useNavigation } from '@react-navigation/native'
 import UserStore from '~/stores/user'
@@ -19,14 +19,61 @@ import icon_setting from '~/assets/images/icon_setting.png'
 import icon_no_note from '~/assets/images/icon_no_note.webp'
 import icon_no_collection from '~/assets/images/icon_no_collection.webp'
 import icon_no_favorate from '~/assets/images/icon_no_favorate.webp'
+import icon_service from '~/assets/images/icon_service.png'
+import icon_scan from '~/assets/images/icon_scan.png'
+import icon_fid_user from '~/assets/images/icon_find_user.png'
+import icon_draft from '~/assets/images/icon_draft.png'
+import icon_create_center from '~/assets/images/icon_create_center.png'
+import icon_browse_histroy from '~/assets/images/icon_browse_history.png'
+import icon_packet from '~/assets/images/icon_packet.png'
+import icon_free_net from '~/assets/images/icon_free_net.png'
+import icon_nice_goods from '~/assets/images/icon_nice_goods.png'
+import icon_orders from '~/assets/images/icon_orders.png'
+import icon_coupon from '~/assets/images/icon_coupon.png'
+import icon_wish from '~/assets/images/icon_wish.png'
+import icon_red_vip from '~/assets/images/icon_red_vip.png'
+import icon_community from '~/assets/images/icon_community.png'
+import icon_exit from '~/assets/images/icon_exit.png'
 
 // import icon_location_info from '~/assets/images/icon_location_info.png'
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window')
+const CONTENT_WIDTH = SCREEN_WIDTH * 0.75
+
 const EMPTY_CONFIG = [
   { icon: icon_no_note, tips: '快去发布今日的好心情吧～' },
   { icon: icon_no_collection, tips: '快去收藏你喜欢的作品吧～' },
   { icon: icon_no_favorate, tips: '喜欢点赞的人运气不会太差哦～' },
+]
+const MENUS = [
+  [
+    { icon: icon_fid_user, name: '发现好友' },
+  ],
+  [
+    { icon: icon_draft, name: '我的草稿' },
+    { icon: icon_create_center, name: '创作中心' },
+    { icon: icon_browse_histroy, name: '浏览记录' },
+    { icon: icon_packet, name: '钱包' },
+    { icon: icon_free_net, name: '免流量' },
+    { icon: icon_nice_goods, name: '好物体验' },
+  ],
+  [
+    { icon: icon_orders, name: '订单' },
+    { icon: icon_shop_car, name: '购物车' },
+    { icon: icon_coupon, name: '卡券' },
+    { icon: icon_wish, name: '心愿单' },
+    { icon: icon_red_vip, name: '小红书会员' },
+  ],
+  [
+    { icon: icon_community, name: '社区公约' },
+    { icon: icon_exit, name: '退出登陆' },
+  ],
+]
+
+const BOTTOM_MENUS = [
+  { icon: icon_setting, txt: '设置' },
+  { icon: icon_service, txt: '帮助与客服' },
+  { icon: icon_scan, txt: '扫一扫' },
 ]
 
 export default () => {
@@ -36,6 +83,8 @@ export default () => {
 
   const [tabIndex, setTabIndex] = React.useState<number>(0)
   const [bgImageHeight, setBgImageHeight] = React.useState<number>(400)
+  const [visible, setVisible] = React.useState(true)
+  const [open, setOpen] = React.useState(true)
 
   const tabList = [
     { name: '关注', active: false },
@@ -66,11 +115,27 @@ export default () => {
     navigation.push('ArticleDetail', { id: article.id })
   }, [navigation])
 
+  function showModal() {
+    setVisible(true)
+    setTimeout(() => {
+      LayoutAnimation.easeInEaseOut()
+      setOpen(true)
+    }, 100)
+  }
+
+  function hideModal() {
+    LayoutAnimation.easeInEaseOut()
+    setOpen(false)
+    setTimeout(() => {
+      setVisible(false)
+    }, 300)
+  }
+
   return (
     <View className="w-full h-full bg-white">
       <Image source={icon_mine_bg} className="absolute top-0 w-full" style={{ height: bgImageHeight + 64 }} />
       <View className="w-full h-12 flex-row items-center">
-        <TouchableOpacity className="h-full px-4 justify-center mr-auto">
+        <TouchableOpacity className="h-full px-4 justify-center mr-auto" onPress={showModal}>
           <Image source={icon_menu} className="w-7 h-7" style={{ resizeMode: 'contain' }} />
         </TouchableOpacity>
         {
@@ -79,7 +144,15 @@ export default () => {
           ))
         }
       </View>
-      <ScrollView className="w-full flex-1">
+      <ScrollView
+        className="w-full flex-1"
+        refreshControl={(
+          <RefreshControl
+            refreshing={store.refreshing}
+            onRefresh={store.requestAll}
+          />
+        )}
+      >
         <View
           onLayout={(event) => {
             const { height } = event.nativeEvent.layout
@@ -169,6 +242,56 @@ export default () => {
               )
         }
       </ScrollView>
+
+      <Modal
+        transparent
+        visible={visible}
+        statusBarTranslucent
+        animationType="fade"
+        onRequestClose={hideModal}
+      >
+        <TouchableOpacity activeOpacity={1} className="w-full h-full bg-[#000000c0] flex-row" onPress={hideModal}>
+          <View className="h-full bg-white" style={{ width: CONTENT_WIDTH, marginLeft: open ? 0 : -CONTENT_WIDTH }}>
+            <ScrollView
+              className="w-full flex-1"
+              contentContainerStyle={{
+                paddingTop: 72,
+                paddingHorizontal: 28,
+                paddingBottom: 12,
+              }}
+              showsVerticalScrollIndicator={false}
+            >
+              {
+                MENUS.map((menu, index) => (
+                  <View key={index}>
+                    {
+                      menu.map((sub, idx) => (
+                        <TouchableOpacity key={idx} className="w-full h-16 flex-row items-center">
+                          <Image source={sub.icon} className="w-8 h-8" style={{ resizeMode: 'contain' }} />
+                          <Text className="text-base text-[#333] ml-3">{sub.name}</Text>
+                        </TouchableOpacity>
+                      ))
+                    }
+                    {MENUS.length === index + 1 ? null : <View className="w-full h-[1] bg-[#eee]" />}
+                  </View>
+                ))
+              }
+            </ScrollView>
+            <View className="w-full flex-row pt-3 pb-5">
+              {
+                BOTTOM_MENUS.map((menu) => (
+                  <TouchableOpacity key={menu.txt} className="flex-1 items-center">
+                    <View className="p-2.5 bg-[#f0f0f0] rounded-full">
+                      <Image className="w-[26] h-[26]" source={menu.icon} />
+                    </View>
+                    <Text className="text-[13] text-[#666] mt-2">{menu.txt}</Text>
+                  </TouchableOpacity>
+                ))
+              }
+            </View>
+          </View>
+        </TouchableOpacity>
+      </Modal>
     </View>
   )
 }
