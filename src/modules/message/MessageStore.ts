@@ -9,7 +9,7 @@ export class MessageStore {
   @observable refreshing = false
 
   @observable messageList: MessageListItem[] = []
-  @observable unread: UnRead[] = []
+  @observable unread: UnRead | null = null
 
   @action
   refresh = () => {
@@ -54,7 +54,7 @@ export class MessageStore {
   @action
   requestUnRead = flow(function* (this: MessageStore) {
     try {
-      const { data } = yield request<object, UnRead[]>('unread', {})
+      const { data } = yield request<object, UnRead>('unread', {})
       this.unread = data
     }
     catch (error) {
