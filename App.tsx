@@ -1,10 +1,12 @@
 import React from 'react'
-import { StatusBar } from 'react-native'
+import { Platform, StatusBar } from 'react-native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { TransitionPresets, createStackNavigator } from '@react-navigation/stack'
 import { NavigationContainer } from '@react-navigation/native'
 
 import type { TransitionPreset } from '@react-navigation/stack/src/types.tsx'
+import { Pushy, PushyProvider } from 'react-native-update'
+import _update_config from './update.json'
 import Welcome from '~/modules/welcome/welcome'
 import Login from '~/modules/login/login'
 import MainTab from '~/modules/mainTab/mainTab.tsx'
@@ -23,6 +25,17 @@ interface IRouter {
   }
 }
 
+const { appKey } = (_update_config as any)[Platform.OS]
+
+const pushyClient = new Pushy({
+  appKey,
+  // 注意，默认情况下，在开发环境中不会检查更新
+  // 如需在开发环境中调试更新，请设置debug为true
+  // 但即便打开此选项，也仅能检查、下载热更，并不能实际应用热更。实际应用热更必须在release包中进行。
+  // debug: true,
+  // updateStrategy: null,
+})
+
 function App(): React.JSX.Element {
   const initialRouteName: RouterNames = 'Welcome'
 
@@ -39,31 +52,33 @@ function App(): React.JSX.Element {
   ]
 
   return (
-    <SafeAreaProvider>
-      <StatusBar
-        barStyle="dark-content"
-        backgroundColor="white"
-      />
-      <NavigationContainer>
-        <Stack.Navigator
-          initialRouteName={initialRouteName}
-          screenOptions={{
-            cardStyle: { elevation: 1 },
-          }}
-        >
-          {
-            defineRouters.map((router) => (
-              <Stack.Screen
-                key={router.name}
-                name={router.name}
-                component={router.component}
-                options={router.options}
-              />
-            ))
-          }
-        </Stack.Navigator>
-      </NavigationContainer>
-    </SafeAreaProvider>
+    <PushyProvider client={pushyClient}>
+      <SafeAreaProvider>
+        <StatusBar
+          barStyle="dark-content"
+          backgroundColor="white"
+        />
+        <NavigationContainer>
+          <Stack.Navigator
+            initialRouteName={initialRouteName}
+            screenOptions={{
+              cardStyle: { elevation: 1 },
+            }}
+          >
+            {
+              defineRouters.map((router) => (
+                <Stack.Screen
+                  key={router.name}
+                  name={router.name}
+                  component={router.component}
+                  options={router.options}
+                />
+              ))
+            }
+          </Stack.Navigator>
+        </NavigationContainer>
+      </SafeAreaProvider>
+    </PushyProvider>
   )
 }
 

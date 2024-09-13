@@ -103,6 +103,9 @@ android {
             signingConfig signingConfigs.debug
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+
+            // 禁用crunch，避免资源压缩，导致资源文件名过长，打包失败
+            crunchPngs false
         }
     }
 }
