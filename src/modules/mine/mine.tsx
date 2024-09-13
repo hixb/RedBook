@@ -1,8 +1,11 @@
 import React from 'react'
-import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native'
+import { Dimensions, Image, ScrollView, Text, TouchableOpacity, View } from 'react-native'
 import { useLocalStore } from 'mobx-react'
+import { useNavigation } from '@react-navigation/native'
 import UserStore from '~/stores/user'
 import MineStore from '~/modules/mine/MineStore.ts'
+import Empty from '~/components/Empty.tsx'
+import Heart from '~/components/Heart.tsx'
 
 import icon_menu from '~/assets/images/icon_menu.png'
 import icon_mine_bg from '~/assets/images/icon_mine_bg.png'
@@ -13,17 +16,25 @@ import icon_qrcode from '~/assets/images/icon_qrcode.png'
 import icon_male from '~/assets/images/icon_male.png'
 import icon_female from '~/assets/images/icon_female.png'
 import icon_setting from '~/assets/images/icon_setting.png'
+import icon_no_note from '~/assets/images/icon_no_note.webp'
+import icon_no_collection from '~/assets/images/icon_no_collection.webp'
+import icon_no_favorate from '~/assets/images/icon_no_favorate.webp'
 
 // import icon_location_info from '~/assets/images/icon_location_info.png'
-// import icon_no_note from '~/assets/images/icon_no_note.webp'
-// import icon_no_collection from '~/assets/images/icon_no_collection.webp'
-// import icon_no_favorate from '~/assets/images/icon_no_favorate.webp'
+
+const { width: SCREEN_WIDTH } = Dimensions.get('window')
+const EMPTY_CONFIG = [
+  { icon: icon_no_note, tips: '快去发布今日的好心情吧～' },
+  { icon: icon_no_collection, tips: '快去收藏你喜欢的作品吧～' },
+  { icon: icon_no_favorate, tips: '喜欢点赞的人运气不会太差哦～' },
+]
 
 export default () => {
+  const navigation = useNavigation<ScreenNavigationProp<'ArticleDetail'>>()
   const store = useLocalStore(() => new MineStore())
   const { userInfo } = UserStore
 
-  const [tabIndex, setTabIndex] = React.useState<number>(1)
+  const [tabIndex, setTabIndex] = React.useState<number>(0)
   const [bgImageHeight, setBgImageHeight] = React.useState<number>(400)
 
   const tabList = [
@@ -31,6 +42,11 @@ export default () => {
     { name: '发现', active: true },
     { name: '广州', active: false },
   ]
+
+  const renderList = React.useMemo(() => {
+    const { noteList, collectionList, favorateList } = store
+    return [noteList, collectionList, favorateList][tabIndex]
+  }, [store, tabIndex])
 
   const countInfo = React.useMemo(() => {
     const { info } = store
@@ -43,8 +59,12 @@ export default () => {
   }, [store])
 
   React.useEffect(() => {
-    store.requestInfo()
+    store.requestAll()
   }, [store])
+
+  const onArticlePress = React.useCallback((article: ArticleSimple) => {
+    navigation.push('ArticleDetail', { id: article.id })
+  }, [navigation])
 
   return (
     <View className="w-full h-full bg-white">
@@ -112,6 +132,42 @@ export default () => {
             ))
           }
         </View>
+        {
+          !renderList.length
+            ? <Empty icon={EMPTY_CONFIG[tabIndex].icon} tips={EMPTY_CONFIG[tabIndex].tips} />
+            : (
+              <View className="w-full flex-row flex-wrap bg-white">
+                {
+                  renderList.map((item, index) => (
+                    <TouchableOpacity
+                      style={{ width: SCREEN_WIDTH - 18 >> 1 }}
+                      className="bg-white ml-1.5 mb-1.5 rounded-lg overflow-hidden"
+                      key={item.id + index}
+                      onPress={() => onArticlePress(item)}
+                    >
+                      <Image source={{ uri: item.image }} style={{ width: SCREEN_WIDTH - 18 >> 1, height: 240 }} />
+                      <View className="px-2 mt-2 mb-3">
+                        <Text className="truncate text-lg text-black">{item.title}</Text>
+                        <View className="flex-row items-center justify-between mt-2">
+                          <View className="flex-row items-center">
+                            <Image className="w-6 h-6 rounded-full" source={{ uri: item.avatarUrl }} style={{ resizeMode: 'contain' }} />
+                            <Text className="ml-1 text-sm">{item.userName}</Text>
+                          </View>
+                          <View className="flex-row items-center">
+                            <Heart
+                              value={item.isFavorite}
+                              onValueChanged={(_: boolean) => {}}
+                            />
+                            <Text className="ml-1 text-sm">{item.favoriteCount}</Text>
+                          </View>
+                        </View>
+                      </View>
+                    </TouchableOpacity>
+                  ))
+                }
+              </View>
+              )
+        }
       </ScrollView>
     </View>
   )

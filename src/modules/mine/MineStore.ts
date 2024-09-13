@@ -24,7 +24,7 @@ export default class MineStore {
       this.requestCollectionList(),
       this.requestFavorateList(),
       this.requestInfo(),
-    ]).then(() => {
+    ]).finally(() => {
       Loading.hide()
       this.refreshing = false
     })
