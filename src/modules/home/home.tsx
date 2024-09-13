@@ -161,7 +161,7 @@ export default observer(() => {
                 <View className="flex-row items-center">
                   <Heart
                     value={item.isFavorite}
-                    onValueChanged={(value: boolean) => {}}
+                    onValueChanged={(_: boolean) => {}}
                   />
                   <Text className="ml-1 text-sm">{item.favoriteCount}</Text>
                 </View>

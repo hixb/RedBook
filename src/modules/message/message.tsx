@@ -2,6 +2,7 @@ import React from 'react'
 import { FlatList, Image, Text, TouchableOpacity, View } from 'react-native'
 
 import { useLocalStore } from 'mobx-react'
+import { Modal } from 'nativewind/dist/preflight'
 import { MessageStore } from '~/modules/message/MessageStore.ts'
 
 import icon_star from '~/assets/images/icon_star.png'
@@ -9,9 +10,13 @@ import icon_group from '~/assets/images/icon_group.png'
 import icon_new_follow from '~/assets/images/icon_new_follow.png'
 import icon_comments from '~/assets/images/icon_comments.png'
 import icon_to_top from '~/assets/images/icon_to_top.png'
+import icon_create_group from '~/assets/images/icon_create_group.png'
 
 export default () => {
   const store = useLocalStore(() => new MessageStore())
+
+  const [visible, setVisible] = React.useState(false)
+  const [y, setY] = React.useState(0)
 
   const messageColumn = React.useMemo(() => {
     const { unread } = store
@@ -32,7 +37,13 @@ export default () => {
     <View className="w-full h-full bg-white">
       <View className="w-full h-12 flex-row items-center justify-center">
         <Text className="text-lg text-[#333]">消息</Text>
-        <TouchableOpacity className="flex-row items-center absolute right-4">
+        <TouchableOpacity
+          className="flex-row items-center absolute right-4 h-full"
+          onPress={(event) => {
+            setY(event.nativeEvent.pageY)
+            setVisible(true)
+          }}
+        >
           <Image className="w-4 h-4" source={icon_group} />
           <Text className="text-sm text-[#333] ml-1.5">群聊</Text>
         </TouchableOpacity>
@@ -83,6 +94,28 @@ export default () => {
           )
         }}
       />
+
+      <Modal
+        transparent
+        visible={visible}
+        statusBarTranslucent
+        animationType="fade"
+        onRequestClose={() => setVisible(false)}
+      >
+        <TouchableOpacity className="w-full h-full bg-[#00000040]" onPress={() => setVisible(false)}>
+          <View className="bg-white rounded-2xl w-40 absolute right-2.5" style={{ top: y + 48 }}>
+            <TouchableOpacity className="items-center flex-row h-12 pl-6">
+              <Image className="w-7 h-7" source={icon_create_group} />
+              <Text className="text-xs text-[#333] ml-2.5">群聊广场</Text>
+            </TouchableOpacity>
+            <View className="mr-4 h-[1] bg-[#eee] ml-5" />
+            <TouchableOpacity className="items-center flex-row h-12 pl-6">
+              <Image className="w-7 h-7" source={icon_create_group} />
+              <Text className="text-xs text-[#333] ml-2.5">群聊广场</Text>
+            </TouchableOpacity>
+          </View>
+        </TouchableOpacity>
+      </Modal>
     </View>
   )
 }
