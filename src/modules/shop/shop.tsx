@@ -1,6 +1,7 @@
 import React from 'react'
-import { Dimensions, FlatList, Image, Text, View } from 'react-native'
+import { Dimensions, FlatList, Image, Text, TouchableOpacity, View } from 'react-native'
 import { observer, useLocalStore } from 'mobx-react'
+import { useNavigation } from '@react-navigation/native'
 import { ShopStore } from '~/modules/shop/shopStore.ts'
 
 import icon_search from '~/assets/images/icon_search.png'
@@ -13,20 +14,25 @@ const ITEM_WIDTH = (SCREEN_WIDTH - 18) / 2
 
 export default observer(() => {
   const store = useLocalStore(() => new ShopStore())
+  const navigation = useNavigation<ScreenNavigationProp<'SearchGoods'>>()
 
   React.useEffect(() => {
     store.requestGoodsList()
     store.requestTop10Category()
   }, [store])
 
+  function onSearchPress() {
+    navigation.push('SearchGoods')
+  }
+
   return (
     <View className="w-full h-full bg-white">
       {/* 搜索 */}
       <View className="w-full h-10 flex-row items-center px-4">
-        <View className="h-8 flex-1 bg-[#f0f0f0] rounded-full flex-row items-center px-4">
+        <TouchableOpacity className="h-8 flex-1 bg-[#f0f0f0] rounded-full flex-row items-center px-4" onPress={onSearchPress}>
           <Image className="w-5 h-5" source={icon_search} />
           <Text className="text-sm text-[#bbb] ml-1.5">bm吊带</Text>
-        </View>
+        </TouchableOpacity>
         <Image className="w-5 h-5 mx-1.5" source={icon_shop_car} />
         <Image className="w-5 h-5 mx-1.5" source={icon_orders} />
         <Image className="w-5 h-5 mx-1.5" source={icon_menu_more} />

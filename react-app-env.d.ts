@@ -15,6 +15,7 @@ declare global {
     Login: undefined
     MainTab: undefined
     ArticleDetail: { id: number }
+    SearchGoods: undefined
   }
 
   type RootStackParamList = BaseStackParamList & {
