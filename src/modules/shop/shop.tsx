@@ -38,24 +38,34 @@ export default observer(() => {
         style={{ flex: 1 }}
         extraData={[store.categoryList]}
         numColumns={2}
-        renderItem={({ item }) => {
-          return (
-            <View className="rounded-lg overflow-hidden ml-1.5 mt-1.5" style={{ width: ITEM_WIDTH }}>
-              <Image className="w-full h-[200]" source={{ uri: item.image }} style={{ resizeMode: 'cover' }} />
-              <Text className="text-sm text-[#333] mt-1.5 px-2">{item.title}</Text>
-              {
-                item.promotion
-                  ? <Text className="text-xs text-[#999] rounded border border-[#bbb] text-center w-20 mt-1">{item.promotion}</Text>
-                  : null
-              }
-              <Text className="text-sm text-[#333] font-bold mt-1">
-                ¥
-                <Text className="text-xl text-[#333] font-bold text-justify">{item.price}</Text>
-                {item.originPrice ? <Text className="text-xs text-[#999]">    原价: {item.originPrice}</Text> : null}
-              </Text>
-            </View>
-          )
-        }}
+        renderItem={({ item }) => (
+          <View className="rounded-lg overflow-hidden ml-1.5 mt-1.5" style={{ width: ITEM_WIDTH }}>
+            <Image className="w-full h-[200]" source={{ uri: item.image }} style={{ resizeMode: 'cover' }} />
+            <Text className="text-sm text-[#333] mt-1.5 px-2">{item.title}</Text>
+            {
+              item.promotion
+                ? <Text className="text-xs text-[#999] rounded border border-[#bbb] text-center w-20 mt-1">{item.promotion}</Text>
+                : null
+            }
+            <Text className="text-sm text-[#333] font-bold mt-1">
+              ¥
+              <Text className="text-xl text-[#333] font-bold text-justify">{item.price}</Text>
+              {item.originPrice ? <Text className="text-xs text-[#999]">    原价: {item.originPrice}</Text> : null}
+            </Text>
+          </View>
+        )}
+        ListHeaderComponent={() => (
+          <View className="w-full flex-row flex-wrap">
+            {
+              store.categoryList.map((cate) => (
+                <View className="items-center w-[20%] py-4" key={cate.id}>
+                  <Image className="w-10 h-10" style={{ resizeMode: 'contain' }} source={{ uri: cate.image }} />
+                  <Text className="text-sm text-[#333] mt-1.5">{cate.name}</Text>
+                </View>
+              ))
+            }
+          </View>
+        )}
       />
     </View>
   )

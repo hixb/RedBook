@@ -9,7 +9,7 @@ export class ShopStore {
   @observable refreshing = false
 
   @observable goodsList: GoodsSimple[] = []
-  @observable categoryList: Category[] = []
+  @observable categoryList: GoodsCategory[] = []
 
   @action
   refresh = () => {
@@ -54,7 +54,7 @@ export class ShopStore {
   @action
   requestTop10Category = flow(function* (this: ShopStore) {
     try {
-      const { data } = yield request<object, Category[]>('top10Category', {})
+      const { data } = yield request<object, GoodsCategory[]>('top10Category', {})
       this.categoryList = data || []
     }
     catch (error) {
